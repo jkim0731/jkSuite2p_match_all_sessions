@@ -101,7 +101,12 @@ for mi in [0,3,8]:
         
         # Run suite2p nonrigid registration for each session
         for sn, sf in zip(sessionNames, sessionFiles):
-            sname = sn.split('_')[1]
+            midNum = sn.split('_')[1]
+            if int(midNum) < 1000:
+                sname = midNum
+            else: # spont and piezo sessions
+                trialNum = sn.split('_')[2]
+                sname = f'{midNum}_{trialNum}'
             opsFn = f'{planeDir}{sname}/plane0/ops.npy'
             binFn = f'{planeDir}{sname}/plane0/data.bin'
             if (not os.path.isfile(opsFn)) & (not os.path.isfile(binFn)): # if suite2p was not run in this session
@@ -114,3 +119,5 @@ for mi in [0,3,8]:
                     'roidetect': False,
                 }
                 run_s2p(ops,db)
+                rawbinFn = f'{planeDir}{sname}/plane0/data_raw.bin'
+                os.remove(rawbinFn)
